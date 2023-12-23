@@ -1,0 +1,102 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                                  Scalper Deriv  |
+//|                                https://www.forexroboteasy.com    |
+//|                                           Developed by Forex Robot Easy Team |
+//+------------------------------------------------------------------+
+#property strict
+
+// Define input parameters
+input double AccountBalance = 5000.0; // Default account balance
+input int RentPeriod = 30; // Default rent period in days
+
+// Define global variables
+double LotSize;
+double StopLoss;
+double TakeProfit;
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+   // Calculate lot size based on account balance
+   if(AccountBalance >= 200000.0)
+   {
+      LotSize = 10.0; // For account balance above $200,000
+   }
+   else if(AccountBalance >= 100000.0)
+   {
+      LotSize = 5.0; // For account balance between $100,000 and $200,000
+   }
+   else if(AccountBalance >= 50000.0)
+   {
+      LotSize = 2.5; // For account balance between $50,000 and $100,000
+   }
+   else if(AccountBalance >= 20000.0)
+   {
+      LotSize = 1.0; // For account balance between $20,000 and $50,000
+   }
+   else
+   {
+      LotSize = 0.5; // For account balance below $20,000
+   }
+
+   // Calculate stop loss and take profit levels
+   StopLoss = 10.0 * Point; // Set fixed stop loss at 10 pips
+   TakeProfit = 20.0 * Point; // Set fixed take profit at 20 pips
+
+   // Other initialization tasks
+
+   return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+   // Perform deinitialization tasks
+}
+
+//+------------------------------------------------------------------+
+//| Expert start function                                            |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+   // Implement scalping strategy
+   // Place trades based on market conditions
+   
+   // Example trade execution
+   if(OrderSend(Symbol(), OP_BUY, LotSize, Ask, 0, Ask - StopLoss, Ask + TakeProfit, 'Scalper Deriv', 0, 0, Green))
+   {
+      // Trade executed successfully
+   }
+   else
+   {
+      // Trade execution failed
+   }
+}
+
+//+------------------------------------------------------------------+
+//| Custom functions                                                 |
+//+------------------------------------------------------------------+
+// Implement custom functions required for the scalping strategy
+
+//+------------------------------------------------------------------+
+//| Expert utility function                                           |
+//+------------------------------------------------------------------+
+void OnTimer()
+{
+   // Check if rent period is over
+   if(RentPeriod == 0)
+   {
+      // Disable trading
+      ExpertRemove();
+   }
+   else
+   {
+      // Decrease rent period by 1 day
+      RentPeriod--;
+   }
+}
